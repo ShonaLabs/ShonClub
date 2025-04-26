@@ -1,4 +1,4 @@
-# API Documentation for native.center
+# API Documentation 
 
 ## REST API
 
