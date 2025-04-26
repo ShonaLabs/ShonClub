@@ -5,6 +5,8 @@ import { User, Room, ReactionType } from '../types/Room';
 
 interface SerializedRoom {
   id: string;
+  name: string;
+  tags: string[];
   hostFid: string;
   speakers: string[];
   listeners: string[];
@@ -42,6 +44,8 @@ export class SocketServer {
   private serializeRoom(room: Room): SerializedRoom {
     return {
       id: room.id,
+      name: room.name,
+      tags: room.tags,
       hostFid: room.hostFid,
       speakers: Array.from(room.speakers),
       listeners: Array.from(room.listeners),
@@ -74,12 +78,18 @@ export class SocketServer {
       /**
        * Handles room creation
        * @event create-room
-       * Creates a new room and sets the creator as host
+       * @param payload - Object containing room details
+       * @param payload.name - The name for the new room
+       * @param payload.tags - Array of tags for the room
        */
-      socket.on('create-room', () => {
+      socket.on('create-room', ({ name, tags = [] }: { name: string; tags?: string[] }) => {
         if (!currentUser) return;
+        if (!name || typeof name !== 'string') {
+          socket.emit('error', { message: 'Room name is required' });
+          return;
+        }
 
-        const room = this.roomManager.createRoom(currentUser);
+        const room = this.roomManager.createRoom(currentUser, name, tags);
         socket.join(room.id);
         currentRoom = room;
 

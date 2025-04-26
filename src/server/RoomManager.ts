@@ -8,13 +8,17 @@ export class RoomManager {
   private rooms: Map<string, Room> = new Map();
 
   /**
-   * Creates a new room with the specified host
+   * Creates a new room with the specified host, name and tags
    * @param host - The user who will be the host of the room
+   * @param name - The name of the room
+   * @param tags - Array of tags for the room
    * @returns The newly created room
    */
-  createRoom(host: User): Room {
+  createRoom(host: User, name: string, tags: string[] = []): Room {
     const room: Room = {
       id: crypto.randomUUID(),
+      name,
+      tags,
       hostFid: host.fid,
       speakers: new Set([host.fid]),
       listeners: new Set(),

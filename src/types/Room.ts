@@ -32,6 +32,10 @@ export interface Reaction {
 export interface Room {
   /** Unique identifier for the room */
   id: string;
+  /** Name of the room */
+  name: string;
+  /** Tags for categorizing the room */
+  tags: string[];
   /** FID of the room host */
   hostFid: string;
   /** Set of FIDs of users who can speak */
